@@ -75,14 +75,14 @@ func getRandomJoke() {
 }
 
 func getRandomJokeWithTerm(searchTerm string) {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 
 	totalJokes, jokes := requestJokeWithTerm(searchTerm)
 
 	if totalJokes <= 0 {
 		fmt.Println("No jokes could be found with the search term")
 	} else {
-		randomIdx := rand.Intn(len(jokes))
+		randomIdx := rand.Intn(len(jokes)-0) + len(jokes)
 		fmt.Println(jokes[randomIdx].Joke)
 	}
 }
