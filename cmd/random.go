@@ -78,12 +78,11 @@ func getRandomJokeWithTerm(searchTerm string) {
 	rand.Seed(time.Now().Unix())
 
 	totalJokes, jokes := requestJokeWithTerm(searchTerm)
-	min, max := 0, totalJokes-1
 
 	if totalJokes <= 0 {
 		fmt.Println("No jokes could be found with the search term")
 	} else {
-		randomIdx := min + rand.Intn(max-min)
+		randomIdx := rand.Intn(len(jokes))
 		fmt.Println(jokes[randomIdx].Joke)
 	}
 }
