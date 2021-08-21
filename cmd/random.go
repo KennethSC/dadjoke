@@ -20,7 +20,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -31,12 +33,20 @@ var randomCmd = &cobra.Command{
 	Short: "Gets a random dad joke",
 	Long:  `Fetches a random joke from the icanhazdadjoke API`,
 	Run: func(cmd *cobra.Command, args []string) {
-		getRandomJoke()
+		searchTerm, _ := cmd.Flags().GetString("term")
+
+		if searchTerm != "" {
+			getRandomJokeWithTerm(searchTerm)
+		} else {
+			getRandomJoke()
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(randomCmd)
+
+	randomCmd.PersistentFlags().String("term", "", "Search for dad jokes related to given term")
 }
 
 type Joke struct {
@@ -45,16 +55,55 @@ type Joke struct {
 	Status int    `json:"status"`
 }
 
+type SearchTermResponse struct {
+	Results    json.RawMessage `json:"results"`
+	SearchTerm string          `json:"search_term"`
+	Status     int             `json:"status"`
+	TotalJokes int             `json:"total_jokes"`
+}
+
 func getRandomJoke() {
 	requestUrl := "https://icanhazdadjoke.com/"
 	responseBytes := requestJoke(requestUrl)
 	joke := Joke{}
 
 	if err := json.Unmarshal(responseBytes, &joke); err != nil {
-		log.Printf("Failed to unmarshal API response - %v", err)
+		log.Fatalf("Failed to unmarshal API response - %v", err)
 	}
 
 	fmt.Println(string(joke.Joke))
+}
+
+func getRandomJokeWithTerm(searchTerm string) {
+	rand.Seed(time.Now().Unix())
+
+	totalJokes, jokes := requestJokeWithTerm(searchTerm)
+	min, max := 0, totalJokes-1
+
+	if totalJokes <= 0 {
+		fmt.Println("No jokes could be found with the search term")
+	} else {
+		randomIdx := min + rand.Intn(max-min)
+		fmt.Println(jokes[randomIdx].Joke)
+	}
+}
+
+func requestJokeWithTerm(searchTerm string) (totalJokes int, jokeList []Joke) {
+	requestUrl := fmt.Sprintf("https://icanhazdadjoke.com/search?term=%s", searchTerm)
+	responseBytes := requestJoke(requestUrl)
+	jokeListRaw := SearchTermResponse{}
+
+	if err := json.Unmarshal(responseBytes, &jokeListRaw); err != nil {
+		log.Fatalf("Failed to unmarshal API response - %v", err)
+	}
+
+	jokes := []Joke{}
+	if err := json.Unmarshal(jokeListRaw.Results, &jokes); err != nil {
+		log.Fatalf("Failed to unmarshal jokeListRaw results - %v", err)
+	}
+
+	return jokeListRaw.TotalJokes, jokes
+
 }
 
 func requestJoke(requestUrl string) []byte {
