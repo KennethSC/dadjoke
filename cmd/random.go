@@ -82,7 +82,8 @@ func getRandomJokeWithTerm(searchTerm string) {
 	if totalJokes <= 0 {
 		fmt.Println("No jokes could be found with the search term")
 	} else {
-		fmt.Println(jokes[0].Joke)
+		randomIdx := rand.Intn(len(jokes))
+		fmt.Println(jokes[randomIdx].Joke)
 	}
 }
 
