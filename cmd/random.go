@@ -20,13 +20,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-<<<<<<< HEAD
 	"math/rand"
 	"net/http"
 	"time"
-=======
-	"net/http"
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 
 	"github.com/spf13/cobra"
 )
@@ -37,7 +33,6 @@ var randomCmd = &cobra.Command{
 	Short: "Gets a random dad joke",
 	Long:  `Fetches a random joke from the icanhazdadjoke API`,
 	Run: func(cmd *cobra.Command, args []string) {
-<<<<<<< HEAD
 		searchTerm, _ := cmd.Flags().GetString("term")
 
 		if searchTerm != "" {
@@ -45,19 +40,13 @@ var randomCmd = &cobra.Command{
 		} else {
 			getRandomJoke()
 		}
-=======
-		getRandomJoke()
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(randomCmd)
-<<<<<<< HEAD
 
 	randomCmd.PersistentFlags().String("term", "", "Search for dad jokes related to given term")
-=======
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 }
 
 type Joke struct {
@@ -66,7 +55,6 @@ type Joke struct {
 	Status int    `json:"status"`
 }
 
-<<<<<<< HEAD
 type SearchTermResponse struct {
 	Results    json.RawMessage `json:"results"`
 	SearchTerm string          `json:"search_term"`
@@ -74,25 +62,18 @@ type SearchTermResponse struct {
 	TotalJokes int             `json:"total_jokes"`
 }
 
-=======
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 func getRandomJoke() {
 	requestUrl := "https://icanhazdadjoke.com/"
 	responseBytes := requestJoke(requestUrl)
 	joke := Joke{}
 
 	if err := json.Unmarshal(responseBytes, &joke); err != nil {
-<<<<<<< HEAD
 		log.Fatalf("Failed to unmarshal API response - %v", err)
-=======
-		log.Printf("Failed to unmarshal API response - %v", err)
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 	}
 
 	fmt.Println(string(joke.Joke))
 }
 
-<<<<<<< HEAD
 func getRandomJokeWithTerm(searchTerm string) {
 	rand.Seed(time.Now().Unix())
 
@@ -125,8 +106,6 @@ func requestJokeWithTerm(searchTerm string) (totalJokes int, jokeList []Joke) {
 
 }
 
-=======
->>>>>>> 64c08232ad36ad5867ce3b2e91eedcc83e9b6cae
 func requestJoke(requestUrl string) []byte {
 	request, err := http.NewRequest(
 		http.MethodGet,
