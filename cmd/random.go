@@ -46,7 +46,7 @@ var randomCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(randomCmd)
 
-	randomCmd.PersistentFlags().String("term", "", "Search for dad jokes related to given term")
+	randomCmd.PersistentFlags().String("term", "", "Search for dad jokes related to the given term")
 }
 
 type Joke struct {

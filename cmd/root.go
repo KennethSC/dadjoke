@@ -31,8 +31,8 @@ var rootCmd = &cobra.Command{
 	Use:   "dadjoke",
 	Short: "Outputs a random dad joke to ther terminal",
 	Long: `This cli tool was made using cobra and Go. It makes a request 
-to the icanhazdadjoke APIthat then returns a random dad joke which then 
-gets printed to ther terminal`,
+to the icanhazdadjoke API that then returns a random dad joke which then 
+gets printed to the terminal`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -56,6 +56,8 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().BoolP("term", "", false, "searches for dadjokes related to given term")
+
 }
 
 // initConfig reads in config file and ENV variables if set.
